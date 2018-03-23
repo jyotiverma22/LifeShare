@@ -11,34 +11,50 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:orientation="horizontal"
+        android:id="@+id/ll1"
         >
         <EditText
             android:id="@+id/et1"
+            android:inputType="number"
+            android:ems="1"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"/>
         <EditText
             android:id="@+id/et2"
+            android:inputType="number"
+            android:ems="1"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"/>
         <EditText
             android:id="@+id/et3"
             android:layout_width="30dp"
+            android:inputType="number"
+            android:ems="1"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"/>
         <EditText
             android:id="@+id/et4"
+            android:inputType="number"
+            android:ems="1"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"/>
 
     </LinearLayout>
 
-    <Button android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="submit"
-        android:textSize="30dp"
+    <Button
         android:id="@+id/bsubmit"
-        />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="134dp"
+        android:layout_marginEnd="71dp"
+        android:layout_marginRight="71dp"
+        android:text="submit"
+        android:textSize="30dp" />
 </RelativeLayout>

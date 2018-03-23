@@ -7,7 +7,9 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.hp.lifeshare.PreferenceHelper;
 import com.example.hp.lifeshare.R;
 
 public class OtpVerifyActivity extends AppCompatActivity {
@@ -125,7 +127,17 @@ public class OtpVerifyActivity extends AppCompatActivity {
         bsubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String t=et1.getText().toString()+et2.getText().toString()+et3.getText().toString()+et4.getText().toString();
+                int myOtp=Integer.parseInt(t);
+                int otp= PreferenceHelper.getdetailsOtp(getApplicationContext());
+            if(otp==myOtp)
+            {
+                Toast.makeText(OtpVerifyActivity.this, "Correct Otp "+otp+myOtp, Toast.LENGTH_SHORT).show();
 
+            }
+            else{
+                Toast.makeText(OtpVerifyActivity.this, "Wrong Otp"+otp+myOtp, Toast.LENGTH_SHORT).show();
+            }
             }
         });
     }

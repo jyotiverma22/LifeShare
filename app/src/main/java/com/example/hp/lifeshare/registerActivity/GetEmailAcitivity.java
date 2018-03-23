@@ -11,11 +11,14 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.hp.lifeshare.PreferenceHelper;
 import com.example.hp.lifeshare.R;
 import com.example.hp.lifeshare.VolleyHelper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.Random;
 
 public class GetEmailAcitivity extends AppCompatActivity {
 Button bemail;
@@ -31,21 +34,33 @@ EditText etemail;
             @Override
             public void onClick(View view) {
             String email=etemail.getText().toString();
-                Toast.makeText(GetEmailAcitivity.this, "On Button click", Toast.LENGTH_SHORT).show();
-                sendEmail(email);
+               // Toast.makeText(GetEmailAcitivity.this, "On Button click", Toast.LENGTH_SHORT).show();
+//                int otp=1234;
+                Random generator = new Random();
+                int n = 8000;
+                n = generator.nextInt(n);
+                Log.e("otp",""+(n+1000));
+
+                int otp=(n+1000);
+
+                Log.e("otp",""+otp);
+                PreferenceHelper.setdetails(getApplicationContext(),email,otp);
+
+                sendEmail(email,otp);
             }
         });
 
     }
 
-    public boolean sendEmail(String email)
+    public boolean sendEmail(String email,int otp)
     {
         //boolean resp;
         try {
             JSONObject json = new JSONObject();
 
             json.put("email", email);
-            json.put("otp", 1234);
+            json.put("otp", otp);
+
 //            Toast.makeText(this, "in fuction", Toast.LENGTH_SHORT).show();
 
             VolleyHelper volleyHelper=new VolleyHelper(getApplicationContext());
@@ -55,7 +70,8 @@ EditText etemail;
                     Log.i("resp",""+response.toString());
                     try{
                          response.getBoolean("resp");
-                        Intent 
+                        startActivity(new Intent(GetEmailAcitivity.this,OtpVerifyActivity.class));
+                        finish();
 
                     }
                     catch (Exception e){

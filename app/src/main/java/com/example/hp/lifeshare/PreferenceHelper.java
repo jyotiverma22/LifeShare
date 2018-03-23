@@ -18,7 +18,7 @@ public class PreferenceHelper {
         detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
         detailEditor=detailPref.edit();
         detailEditor.putString("email",email);
-        detailEditor.putInt("phone",otp);
+        detailEditor.putInt("otp",otp);
         detailEditor.commit();
     }
 

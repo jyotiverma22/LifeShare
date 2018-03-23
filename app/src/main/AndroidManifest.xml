@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.hp.lifeshare">
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -19,7 +20,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".registerActivity.GetEmailAcitivity" />
-        <activity android:name=".registerActivity.OtpVerifyActivity"></activity>
+        <activity android:name=".registerActivity.OtpVerifyActivity" />
+        <activity
+            android:name=".registerActivity.TabActivity"
+            android:label="@string/title_activity_tab"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
