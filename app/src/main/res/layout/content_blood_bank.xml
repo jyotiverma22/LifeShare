@@ -8,5 +8,8 @@
     tools:context="com.example.hp.lifeshare.BloodBankDetails.BloodBankActivity"
     tools:showIn="@layout/app_bar_blood_bank">
 
-
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>
