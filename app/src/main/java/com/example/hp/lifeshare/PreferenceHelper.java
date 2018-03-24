@@ -29,15 +29,22 @@ public class PreferenceHelper {
         detailEditor.putString("dob",dob);
         detailEditor.commit();
     }
-    public static void setBloodBankDetails(Context context,String name,String phone,String address)
+    public static void setBloodBankDetails(Context context,String name,String phone)
     {
         detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
         detailEditor=detailPref.edit();
         detailEditor.putString("name",name);
         detailEditor.putString("phone",phone);
-        detailEditor.putString("address",address);
         detailEditor.commit();
     }
+
+    public static String getdetailsPhone(Context context)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        return detailPref.getString("phone",null);
+
+    }
+
     public static void setDonorResponse(Context context,Boolean resp)
     {
         detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
@@ -45,6 +52,22 @@ public class PreferenceHelper {
         detailEditor.putBoolean("resp",resp);
         detailEditor.commit();
     }
+
+    public static void setUserTyoe(Context context,String resp)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        detailEditor=detailPref.edit();
+        detailEditor.putString("usertype",resp);
+        detailEditor.commit();
+    }
+
+    public static String getUserType(Context context)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        return detailPref.getString("usertype",null);
+
+    }
+
 
     public static Boolean getDonorResp(Context context)
     {
@@ -83,6 +106,14 @@ public class PreferenceHelper {
         detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
         detailEditor=detailPref.edit();
         detailEditor.putString("group",group);
+        detailEditor.commit();
+    }
+
+    public static void clearDetails(Context context)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        detailEditor=detailPref.edit();
+        detailEditor.clear();
         detailEditor.commit();
     }
 

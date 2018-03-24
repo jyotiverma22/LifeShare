@@ -7,12 +7,12 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -49,7 +49,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, LocationListener {
+public class BloodBankMaps extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, LocationListener {
 
     private GoogleMap mMap;
     private double longitude;
@@ -95,7 +95,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MapsActivity.this, ""+latitude+""+longitude, Toast.LENGTH_SHORT).show();
+                Toast.makeText(BloodBankMaps.this, ""+latitude+""+longitude, Toast.LENGTH_SHORT).show();
                 String msg="lat long="+latitude+", "+longitude;
                 try{
                     jsonObject.put("latitude",latitude);
@@ -117,17 +117,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String email=PreferenceHelper.getdetailsEmail(getApplicationContext());
         try {
             jsonObject.put("email", "" + email);
-            jsonObject.put("phoneNo","935825465242");
+            jsonObject.put("phoneNo",""+PreferenceHelper.getdetailsPhone(getApplicationContext()));
             jsonObject.put("name",PreferenceHelper.getdetailsName(getApplicationContext())+"");
             JSONObject date=new JSONObject();
-            String dob=PreferenceHelper.getdetailsDob(getApplicationContext());
-            String[] splitArray = dob.split("/");
-                date.put("date",splitArray[0]);
-                date.put("month",splitArray[1]);
-                date.put("year",splitArray[2]);
-
-            jsonObject.put("DOB",date);
-            jsonObject.put("BloodGroup",PreferenceHelper.getdetailsBgroup(getApplicationContext()));
         }
         catch (Exception e)
         {
@@ -143,92 +135,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
-    public void uploadFile2(Uri filepath,final double latitude,final double longitude,String email)
-    {
-
-        if(filepath!=null) {
-            //displaying a progress dialog while upload is going on
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Flie 2 Uploading");
-            progressDialog.show();
-
-            StorageReference imageRef = mStorageRef.child(""+email+"/back.jpg");
-            //    downloadUrl;
-            imageRef.putFile(filepath)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            // Get a URL to the uploaded content
-                            //if the upload is successfull
-                            //hiding the progress dialog
-                            progressDialog.dismiss();
-                            downloadUrl = taskSnapshot.getDownloadUrl();
-
-                            try{
-                                jsonObject.put("documentBack",downloadUrl+"");
-                            }
-                            catch (Exception e)
-                            {
-
-                            }
-                            Log.e("Uri",""+downloadUrl.toString());
-                            Toast.makeText(MapsActivity.this, "Information Saved...", Toast.LENGTH_LONG).show();
-                            VolleyHelper volleyHelper=new VolleyHelper(getApplicationContext());
-                            volleyHelper.post("registerDonor", jsonObject, new Response.Listener<JSONObject>() {
-                                @Override
-                                public void onResponse(JSONObject response) {
-
-                                    try {
-                                        if(response.getBoolean("resp"))
-                                        {
-                                            Toast.makeText(MapsActivity.this, "true", Toast.LENGTH_SHORT).show();
-                                            PreferenceHelper.setDonorResponse(getApplicationContext(),true);
-                                            PreferenceHelper.setUserTyoe(getApplicationContext(),"Donor");
-                                            startActivity(new Intent(MapsActivity.this, GetResponse.class));
-                                            finish();
-                                        }
-                                        else{
-                                            Toast.makeText(MapsActivity.this, ""+response.get("error"), Toast.LENGTH_SHORT).show();
-                                        }
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-
-                                }
-                            });
-                            //         return downloadUrl;
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            //if the upload is not successfull
-                            //hiding the progress dialog
-                            progressDialog.dismiss();
-                            //and displaying error message
-                            Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-                            Toast.makeText(MapsActivity.this, "not uploaded", Toast.LENGTH_SHORT).show();
-                            // Handle unsuccessful uploads
-                            // ...
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-
-                            //displaying percentage in progress dialog
-                            progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
-                        }
-                    });
-        }
-
-    }
 
     public void uploadFile(Uri filepath,final double latitude,final double longitude,final  String email)
     {
@@ -251,16 +157,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             progressDialog.dismiss();
                             downloadUrl = taskSnapshot.getDownloadUrl();
                             try{
-                                jsonObject.put("documentFront",downloadUrl+"");
+                                jsonObject.put("document",downloadUrl+"");
                             }
                             catch (Exception e)
                             {
 
                             }
                             Log.e("Uri",""+downloadUrl.toString());
-                            Toast.makeText(MapsActivity.this, "Information Saved...", Toast.LENGTH_LONG).show();
-                            Uri file2 = Uri.fromFile(new File(PreferenceHelper.getdetailsBack(getApplicationContext())));
-                            uploadFile2(file2,0,0,email);
+                            Toast.makeText(BloodBankMaps.this, "Information Saved...", Toast.LENGTH_LONG).show();
+                            VolleyHelper volleyHelper=new VolleyHelper(getApplicationContext());
+                            volleyHelper.post("registerBank", jsonObject, new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                        Log.e("resp",""+response);
+                                    try {
+
+                                        if(response.getBoolean("resp"))
+                                        {
+                                            Toast.makeText(BloodBankMaps.this, "true", Toast.LENGTH_SHORT).show();
+                                            PreferenceHelper.setDonorResponse(getApplicationContext(),true);
+                                            PreferenceHelper.setUserTyoe(getApplicationContext(),"Bank");
+                                            startActivity(new Intent(BloodBankMaps.this, GetResponse.class));
+
+                                            finish();
+                                        }
+                                        else{
+                                            Toast.makeText(BloodBankMaps.this, ""+response.get("error"), Toast.LENGTH_SHORT).show();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+
+                                }
+                            });
+                            startActivity(new Intent(BloodBankMaps.this, TabActivity.class));
 
 //                            startActivity(new Intent(MapsActivity.this, TabActivity.class));
                             //         return downloadUrl;
@@ -274,7 +208,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             progressDialog.dismiss();
                             //and displaying error message
                             Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-                            Toast.makeText(MapsActivity.this, "not uploaded", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BloodBankMaps.this, "not uploaded", Toast.LENGTH_SHORT).show();
                             // Handle unsuccessful uploads
                             // ...
                         }
@@ -295,7 +229,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Getting current location
     private void getCurrentLocation() {
 //        mMap.clear();
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -338,9 +272,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
             mMap=googleMap;
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 001);
+            ActivityCompat.requestPermissions(BloodBankMaps.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 001);
 
         } else {
 
