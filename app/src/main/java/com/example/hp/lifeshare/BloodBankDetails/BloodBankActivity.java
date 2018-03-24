@@ -2,12 +2,7 @@ package com.example.hp.lifeshare.BloodBankDetails;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -36,6 +31,9 @@ public class BloodBankActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, new currentDetails());
+        ft.commit();
     }
 
     @Override
@@ -44,7 +42,8 @@ public class BloodBankActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            BloodBankActivity.this.finish();
+           // super.onBackPressed();
         }
     }
 
@@ -88,6 +87,7 @@ public class BloodBankActivity extends AppCompatActivity
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);*/
+        displaySelectedScreen(item.getItemId());
         return true;
     }
     private void displaySelectedScreen(int itemId) {
