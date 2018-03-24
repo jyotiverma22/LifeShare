@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.hp.lifeshare.DonorDetails.GetResponse;
 import com.example.hp.lifeshare.registerActivity.GetEmailAcitivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,10 +18,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
 
+                if(PreferenceHelper.getDonorResp(getApplicationContext()))
+                {
 
-                final Intent mainIntent = new Intent(MainActivity.this,GetEmailAcitivity.class);
-                MainActivity.this.startActivity(mainIntent);
-                MainActivity.this.finish();
+                    final Intent mainIntent = new Intent(MainActivity.this,GetResponse.class);
+                    MainActivity.this.startActivity(mainIntent);
+                    MainActivity.this.finish();
+                }
+                else {
+
+                    final Intent mainIntent = new Intent(MainActivity.this, GetEmailAcitivity.class);
+                    MainActivity.this.startActivity(mainIntent);
+                    MainActivity.this.finish();
+                }
             }
         }, 1000);
 

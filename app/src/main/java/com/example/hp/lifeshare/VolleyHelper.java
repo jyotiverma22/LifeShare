@@ -21,8 +21,8 @@ public class VolleyHelper {
     private final Context mContext;
     private final RequestQueue mRequestQueue;
    // private final ImageLoader mImageLoader;
-//   public  final static String mBaseUrl="http://uietnotification.herokuapp.com";
-    public  final static String mBaseUrl="http://192.168.43.154:3000";
+ public  final static String mBaseUrl="http://192.168.43.154:3000";
+  //  public  final static String mBaseUrl="http://life-share.herokuapp.com/";
 
     public VolleyHelper(Context c){
         mContext = c;

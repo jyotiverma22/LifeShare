@@ -134,6 +134,7 @@ public class TabActivity extends AppCompatActivity {
         SectionsPagerAdapter sectionsPagerAdapter=new SectionsPagerAdapter(getSupportFragmentManager());
         sectionsPagerAdapter.addFragment(new UserFragment(),"Donor Details");
         sectionsPagerAdapter.addFragment(new BloodbankFragment(),"BloodBank Details");
+        viewPager.setAdapter(sectionsPagerAdapter);
 
     }
 

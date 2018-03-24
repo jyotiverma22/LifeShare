@@ -21,6 +21,69 @@ public class PreferenceHelper {
         detailEditor.putInt("otp",otp);
         detailEditor.commit();
     }
+    public static void setDonorDetails(Context context,String name,String dob)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        detailEditor=detailPref.edit();
+        detailEditor.putString("name",name);
+        detailEditor.putString("dob",dob);
+        detailEditor.commit();
+    }
+
+    public static void setDonorResponse(Context context,Boolean resp)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        detailEditor=detailPref.edit();
+        detailEditor.putBoolean("resp",resp);
+        detailEditor.commit();
+    }
+
+    public static Boolean getDonorResp(Context context)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        return detailPref.getBoolean("resp",false);
+
+    }
+
+
+
+    public static void setDonorFront(Context context,String front)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        detailEditor=detailPref.edit();
+        detailEditor.putString("front",front);
+        detailEditor.commit();
+    }
+    public static void setDonorFrontImage(Context context,String front,String back)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        detailEditor=detailPref.edit();
+        detailEditor.putString("frontimage",front);
+
+        detailEditor.commit();
+    }
+
+    public static void setDonorBack(Context context,String back)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        detailEditor=detailPref.edit();
+        detailEditor.putString("back",back);
+        detailEditor.commit();
+    }
+    public static void setDonorBgroup(Context context,String group)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        detailEditor=detailPref.edit();
+        detailEditor.putString("group",group);
+        detailEditor.commit();
+    }
+
+    public static String getdetailsBgroup(Context context)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        return detailPref.getString("group",null);
+
+    }
 
     public static String getdetailsEmail(Context context)
     {
@@ -28,6 +91,34 @@ public class PreferenceHelper {
         return detailPref.getString("email",null);
 
     }
+    public static String getdetailsName(Context context)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        return detailPref.getString("name",null);
+
+    }
+    public static String getdetailsDob(Context context)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        return detailPref.getString("dob",null);
+
+    }
+    public static String getdetailsFront(Context context)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        return detailPref.getString("front",null);
+
+    }
+    public static String getdetailsBack(Context context)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        return detailPref.getString("back",null);
+
+    }
+
+
+
+
     public static int getdetailsOtp(Context context)
     {
         detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);

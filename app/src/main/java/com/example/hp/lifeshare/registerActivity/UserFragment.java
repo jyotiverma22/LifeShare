@@ -1,14 +1,38 @@
 package com.example.hp.lifeshare.registerActivity;
 
+import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.example.hp.lifeshare.PreferenceHelper;
 import com.example.hp.lifeshare.R;
+
+import java.io.File;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +51,13 @@ public class UserFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    EditText etname,etdob;
+    Button bfront,bback,bsubmit;
+    DatePickerDialog mDatePicker;
+    Spinner sgroup;
+    String bloodgroup;
+    String picturePath;
+    final static int MY_REQUEST_CODE = 100;
     private OnFragmentInteractionListener mListener;
 
     public UserFragment() {
@@ -65,32 +95,211 @@ public class UserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user, container, false);
+        final View myView= inflater.inflate(R.layout.fragment_user, container, false);
+        etname=(EditText)myView.findViewById(R.id.etname);
+        etdob=(EditText)myView.findViewById(R.id.etdob);
+        bfront=(Button) myView.findViewById(R.id.documentFront);
+        bback=(Button)myView.findViewById(R.id.documentBack);
+        bsubmit=(Button)myView.findViewById(R.id.bsubmit);
+        sgroup=(Spinner)myView.findViewById(R.id.bloodGroup);
+
+        /*
+        List<String> repeatType = db.getRepeatType();
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, repeatType);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        repeat.setAdapter(adapter);
+*/
+        String[] bgroups=new String[]{"A","B","O"};
+        final ArrayAdapter<String> adapter=new ArrayAdapter<String>(myView.getContext(),android.R.layout.simple_spinner_item,bgroups);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sgroup.setAdapter(adapter);
+
+
+        etdob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar mcurrentDate = Calendar.getInstance();
+                int mYear = mcurrentDate.get(Calendar.YEAR);
+                int mMonth = mcurrentDate.get(Calendar.MONTH);
+                int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+                mDatePicker = new DatePickerDialog(myView.getContext(), new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                        // TODO Auto-generated method stub
+                    /*      Your code   to get date and time    */
+                        selectedmonth = selectedmonth + 1;
+                        etdob.setText("" + selectedday + "/" + selectedmonth + "/" + selectedyear);
+                        etdob.clearFocus();
+                    }
+                }, mYear, mMonth, mDay);
+                mDatePicker.setTitle("Select Date");
+                mDatePicker.show();
+
+            }
+        });
+
+        bfront.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+
+                String root = Environment.getExternalStorageDirectory().toString();
+                File myDir = new File(root + "/LifeShare/documents");
+                if(!myDir.exists())
+                    myDir.mkdirs();
+                String ctime=System.currentTimeMillis()+"";
+                String fname = "front"+ctime+".jpg";
+                File file = new File (myDir, fname);
+                Log.e("camera path",""+file);
+                //File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                startActivityForResult(intent, 0012);
+                picturePath=file.getPath();
+                bfront.setText(""+fname);
+                PreferenceHelper.setDonorFront(myView.getContext(),picturePath);
+
+            }
+        });
+
+        bback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+
+                String root = Environment.getExternalStorageDirectory().toString();
+                File myDir = new File(root + "/LifeShare/documents");
+                if(!myDir.exists())
+                    myDir.mkdirs();
+                String ctime=System.currentTimeMillis()+"";
+                String fname = "back"+ctime+".jpg";
+                File file = new File (myDir, fname);
+                Log.e("camera path",""+file);
+                //File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                startActivityForResult(intent, 0012);
+                picturePath=file.getPath();
+                bback.setText(""+fname);
+                PreferenceHelper.setDonorBack(myView.getContext(),picturePath);
+
+
+
+            }
+        });
+        sgroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //Get repeat type
+//                String name=ge
+  //              Repeat=position;
+    //            Log.e("Repeat type1",""+Repeat);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+      //  Log.e("Repeat",""+Repeat);
+
+
+        bsubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name =etname.getText().toString();
+                String dob=etdob.getText().toString();
+                String bgroup= sgroup.getSelectedItem().toString();
+                Log.e("blood group",""+bgroup);
+                PreferenceHelper.setDonorDetails(myView.getContext(),name,dob);
+                PreferenceHelper.setDonorBgroup(myView.getContext(),bgroup);
+
+                Log.e("email",""+PreferenceHelper.getdetailsEmail(myView.getContext()));
+                Log.e("name",""+PreferenceHelper.getdetailsName(myView.getContext()));
+                Log.e("front",""+PreferenceHelper.getdetailsFront(myView.getContext()));
+                Log.e("back",""+PreferenceHelper.getdetailsBack(myView.getContext()));
+                Log.e("dob",""+PreferenceHelper.getdetailsDob(myView.getContext()));
+                Log.e("group",""+PreferenceHelper.getdetailsBgroup(myView.getContext()));
+
+                startActivity(new Intent(myView.getContext(),MapsActivity.class));
+
+
+            }
+        });
+
+
+//        etdob.s
+        return myView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode)
+            {
+                case 0011:
+                    if(data!=null) {
+                        try {
+
+             /*               final Uri imageUri = data.getData();
+                            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+                            Cursor cursor = getContentResolver().query(imageUri,filePathColumn, null, null, null);
+                            cursor.moveToFirst();
+                            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+
+                            picturePath = cursor.getString(columnIndex);
+                            Log.e("nnew path",""+picturePath);
+                            cursor.close();
+                            Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
+
+                            Bitmap bt=Bitmap.createScaledBitmap(bitmap, 120, 120, false);
+//                            Bitmap bt=Bitmap.createScaledBitmap(bitmap, 150, 150, false);
+//                            final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                            //                          final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                            profilepic.setImageBitmap(bt);
+                            savefile(picturePath);
+                            Log.e("details in pref",""+emailAndotpPreference.getdetailsImagePath(getApplicationContext())+" "+emailAndotpPreference.getImageStatus(getApplicationContext()));
+                            ExifInterface exif = null;
+             */               try {
+
+                            } catch (Exception e) {
+
+                            }
+                            //   selectedImage.setHeight();
+                            // selectedImage.setWidth();
+                            // profilepic.setImageBitmap(selectedImage);
+                        } catch (Exception e) {
+               //             Toast.makeText(this, "File not Found", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    break;
+                case 0012:
+                    try {
+                        //   final Uri imageUri = data.getData();
+
+
+                        //    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                        //    profilepic.setImageBitmap(photo);
+
+
+                        Log.e("pathhhh",""+picturePath);
+//                        profilepic.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+//                      //.setdetailsImagePath(getApplicationContext(),picturePath);
+//                        emailAndotpPreference.setImageStatus(getApplicationContext(),true);
+
+//                        Bitmap photo = (Bitmap) data.getExtras().get("data");
+                        //                      profilepic.setImageBitmap(photo);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+
         }
+
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+
+
 
     /**
      * This interface must be implemented by activities that contain this

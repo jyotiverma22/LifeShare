@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.hp.lifeshare.NetworkConnection;
 import com.example.hp.lifeshare.PreferenceHelper;
 import com.example.hp.lifeshare.R;
 import com.example.hp.lifeshare.VolleyHelper;
@@ -33,27 +34,37 @@ EditText etemail;
         bemail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            String email=etemail.getText().toString();
-               // Toast.makeText(GetEmailAcitivity.this, "On Button click", Toast.LENGTH_SHORT).show();
+                if(NetworkConnection.isNetworkAvailable(getApplicationContext())) {
+                    String email = etemail.getText().toString();
+                    // Toast.makeText(GetEmailAcitivity.this, "On Button click", Toast.LENGTH_SHORT).show();
 //                int otp=1234;
-                Random generator = new Random();
-                int n = 8000;
-                n = generator.nextInt(n);
-                Log.e("otp",""+(n+1000));
+                    Random generator = new Random();
+                    int n = 8000;
+                    n = generator.nextInt(n);
+                    Log.e("otp", "" + (n + 1000));
 
-                int otp=(n+1000);
+                    int otp = (n + 1000);
 
-                Log.e("otp",""+otp);
-                PreferenceHelper.setdetails(getApplicationContext(),email,otp);
+                    Log.e("otp", "" + otp);
+                    PreferenceHelper.setdetails(getApplicationContext(), email, otp);
 
-                sendEmail(email,otp);
+
+                    sendEmail(email, otp);
+                }
+                else
+                {
+                    Toast.makeText(GetEmailAcitivity.this, "Network not available", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
     }
 
     public boolean sendEmail(String email,int otp)
-    {
+    {/*
+        startActivity(new Intent(GetEmailAcitivity.this,OtpVerifyActivity.class));
+        finish();*/
+
         //boolean resp;
         try {
             JSONObject json = new JSONObject();
@@ -69,7 +80,7 @@ EditText etemail;
                 public void onResponse(JSONObject response) {
                     Log.i("resp",""+response.toString());
                     try{
-                         response.getBoolean("resp");
+                        response.getBoolean("resp");
                         startActivity(new Intent(GetEmailAcitivity.this,OtpVerifyActivity.class));
                         finish();
 

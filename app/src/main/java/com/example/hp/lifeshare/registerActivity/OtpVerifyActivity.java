@@ -1,5 +1,6 @@
 package com.example.hp.lifeshare.registerActivity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -133,6 +134,8 @@ public class OtpVerifyActivity extends AppCompatActivity {
             if(otp==myOtp)
             {
                 Toast.makeText(OtpVerifyActivity.this, "Correct Otp "+otp+myOtp, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(OtpVerifyActivity.this,TabActivity.class));
+                finish();
 
             }
             else{

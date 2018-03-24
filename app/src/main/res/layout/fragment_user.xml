@@ -13,7 +13,7 @@
         android:padding="50dp"
         android:gravity="center">
               <EditText
-            android:id="@+id/name"
+            android:id="@+id/etname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -21,7 +21,7 @@
                   android:layout_marginBottom="10dp"
             android:hint="Full Name"/>
         <EditText
-            android:id="@+id/dob"
+            android:id="@+id/etdob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -68,7 +68,7 @@
             android:text="Back" />
         </LinearLayout>
         <Button
-        android:id="@+id/submit"
+        android:id="@+id/bsubmit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Submit" />
