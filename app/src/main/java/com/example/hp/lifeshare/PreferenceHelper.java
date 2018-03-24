@@ -29,7 +29,15 @@ public class PreferenceHelper {
         detailEditor.putString("dob",dob);
         detailEditor.commit();
     }
-
+    public static void setBloodBankDetails(Context context,String name,String phone,String address)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        detailEditor=detailPref.edit();
+        detailEditor.putString("name",name);
+        detailEditor.putString("phone",phone);
+        detailEditor.putString("address",address);
+        detailEditor.commit();
+    }
     public static void setDonorResponse(Context context,Boolean resp)
     {
         detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);

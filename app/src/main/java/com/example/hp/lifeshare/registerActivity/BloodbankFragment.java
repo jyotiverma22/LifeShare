@@ -1,14 +1,29 @@
 package com.example.hp.lifeshare.registerActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
 
+import com.example.hp.lifeshare.PreferenceHelper;
 import com.example.hp.lifeshare.R;
+
+import java.io.File;
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +42,10 @@ public class BloodbankFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    EditText etname,etaddress,etphone;
+    Button bfront,bsubmit;
+    String picturePath;
+    final static int MY_REQUEST_CODE = 100;
     private OnFragmentInteractionListener mListener;
 
     public BloodbankFragment() {
@@ -64,23 +82,69 @@ public class BloodbankFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_bloodbank, container, false);
-    }
+        final View myView= inflater.inflate(R.layout.fragment_user, container, false);
+        etname=(EditText)myView.findViewById(R.id.etname);
+        etphone=(EditText)myView.findViewById(R.id.etphn);
+        etaddress=(EditText)myView.findViewById(R.id.etadd);
+        bfront=(Button) myView.findViewById(R.id.documentFront);
+        bsubmit=(Button)myView.findViewById(R.id.bsubmit);
+
+
+        bfront.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+
+                String root = Environment.getExternalStorageDirectory().toString();
+                File myDir = new File(root + "/LifeShare/documents");
+                if(!myDir.exists())
+                    myDir.mkdirs();
+                String ctime=System.currentTimeMillis()+"";
+                String fname = "front"+ctime+".jpg";
+                File file = new File (myDir, fname);
+                Log.e("camera path",""+file);
+
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                startActivityForResult(intent, 0012);
+                picturePath=file.getPath();
+                bfront.setText(""+fname);
+                PreferenceHelper.setDonorFront(myView.getContext(),picturePath);
+
+            }
+        });
+
+
+
+        bsubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name =etname.getText().toString();
+                String phone=etphone.getText().toString();
+                String address=etaddress.getText().toString();
+
+               // PreferenceHelper.setBloodBankDetails(myView.getContext(),name,phone,address);
+
+
+               /* Log.e("email",""+PreferenceHelper.getdetailsEmail(myView.getContext()));
+                Log.e("name",""+PreferenceHelper.getdetailsName(myView.getContext()));
+                Log.e("front",""+PreferenceHelper.getdetailsFront(myView.getContext()));
+                Log.e("back",""+PreferenceHelper.getdetailsBack(myView.getContext()));
+                Log.e("dob",""+PreferenceHelper.getdetailsDob(myView.getContext()));
+                Log.e("group",""+PreferenceHelper.getdetailsBgroup(myView.getContext()));*/
+
+                startActivity(new Intent(myView.getContext(),MapsActivity.class));
+
+
+            }
+        });
+
+
+
+        return myView;  }
 
     // TODO: Rename method, update argument and hook method into UI event
 
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
