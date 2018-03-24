@@ -52,6 +52,10 @@
         <activity
             android:name=".DonorDetails.DonorActivity"
             android:label="@string/title_activity_donor"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BloodBankDetails.BloodBankActivity"
+            android:label="@string/title_activity_blood_bank"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
