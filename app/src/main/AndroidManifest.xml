@@ -25,7 +25,6 @@
         <activity android:name=".registerActivity.GetEmailAcitivity" />
         <activity android:name=".registerActivity.OtpVerifyActivity" />
         <activity android:name=".DonorDetails.GetResponse" />
-
         <activity
             android:name=".registerActivity.TabActivity"
             android:label="@string/title_activity_tab"
@@ -56,7 +55,14 @@
         <activity
             android:name=".BloodBankDetails.BloodBankActivity"
             android:label="@string/title_activity_blood_bank"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".DonorDetails.DonorTimeline" />
+        <activity
+            android:name=".DonorDetails.DonorMap"
+            android:label="@string/title_activity_donor_map" />
+
+        <activity android:name=".DonorDetails.ShowBloodbankDetails"></activity>
+
     </application>
 
 </manifest>

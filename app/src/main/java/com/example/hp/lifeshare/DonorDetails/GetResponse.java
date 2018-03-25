@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.hp.lifeshare.BloodBankDetails.BloodBankActivity;
 import com.example.hp.lifeshare.PreferenceHelper;
 import com.example.hp.lifeshare.R;
 import com.example.hp.lifeshare.VolleyHelper;
@@ -29,11 +30,18 @@ public class GetResponse extends AppCompatActivity {
                     try {
                         if (response.getBoolean("resp")) {
                             //   Intent.
+                            startActivity(new Intent(GetResponse.this,DonorTimeline.class
+                            ));
                         } else {
                             Toast.makeText(GetResponse.this, "" + response.get("error"), Toast.LENGTH_SHORT).show();
                             int errorCode = response.getInt("errorCode");
                             if (errorCode == 2) {
-                                PreferenceHelper.clearDetails(getApplicationContext());
+                                startActivity(new Intent(GetResponse.this,DonorTimeline.class));
+
+                         /*       PreferenceHelper.clearDetails(getApplicationContext());
+                                startActivity(new Intent(GetResponse.this, GetEmailAcitivity.class));
+                                finish();
+*/
                             } else {
 
                             }
@@ -57,15 +65,21 @@ public class GetResponse extends AppCompatActivity {
                 public void onResponse(JSONObject response) {
                     try {
                         if (response.getBoolean("resp")) {
-                            //   Intent.
+                               startActivity(new Intent(GetResponse.this,BloodBankActivity.class));
+                               finish();
                         } else {
                             Toast.makeText(GetResponse.this, "" + response.get("error"), Toast.LENGTH_SHORT).show();
                             int errorCode = response.getInt("errorCode");
                             if (errorCode == 2) {
+/*
 
                                 PreferenceHelper.clearDetails(getApplicationContext());
                                 startActivity(new Intent(GetResponse.this, GetEmailAcitivity.class));
                                 finish();
+*/
+                                startActivity(new Intent(GetResponse.this,BloodBankActivity.class));
+                                finish();
+
                             } else {
 
                             }
@@ -82,11 +96,18 @@ public class GetResponse extends AppCompatActivity {
             });
         }
         else{
+/*
             PreferenceHelper.clearDetails(getApplicationContext());
             startActivity(new Intent(GetResponse.this, GetEmailAcitivity.class));
             finish();
+*/
+            startActivity(new Intent(GetResponse.this,BloodBankActivity.class));
+            finish();
+
 
         }
+        startActivity(new Intent(GetResponse.this,DonorTimeline.class));
+
 
 
 
