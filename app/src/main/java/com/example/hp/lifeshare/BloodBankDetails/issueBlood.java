@@ -51,10 +51,11 @@ public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
     @Override
     public void onResume() {
         super.onResume();
-        String[] bgroups=new String[]{"o+","o-","a+","a-","b+","b-","ab+","ab-"};
+        String[] bgroups=new String[]{"O+","O-","A+","A-","B+","B-","AB+","AB-"};
         final ArrayAdapter<String> adapter=new ArrayAdapter<String>(c,android.R.layout.simple_spinner_item,bgroups);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         bg.setAdapter(adapter);
+
        final BloodBankHistoryItem bloodBankHistoryItem = new BloodBankHistoryItem();
         bg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

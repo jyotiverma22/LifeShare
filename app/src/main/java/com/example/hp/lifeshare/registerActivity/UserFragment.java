@@ -1,9 +1,11 @@
 package com.example.hp.lifeshare.registerActivity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +30,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.hp.lifeshare.MainActivity;
 import com.example.hp.lifeshare.PreferenceHelper;
 import com.example.hp.lifeshare.R;
 
@@ -109,7 +113,7 @@ public class UserFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         repeat.setAdapter(adapter);
 */
-        String[] bgroups=new String[]{"A","B","O"};
+        String[] bgroups=new String[]{"O+","O-","A+","A-","B+","B-","AB+","AB-"};
         final ArrayAdapter<String> adapter=new ArrayAdapter<String>(myView.getContext(),android.R.layout.simple_spinner_item,bgroups);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sgroup.setAdapter(adapter);
@@ -140,47 +144,56 @@ public class UserFragment extends Fragment {
         bfront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, 001);
+                }
+                else {
+                    Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
 
-                String root = Environment.getExternalStorageDirectory().toString();
-                File myDir = new File(root + "/LifeShare/documents");
-                if(!myDir.exists())
-                    myDir.mkdirs();
-                String ctime=System.currentTimeMillis()+"";
-                String fname = "front"+ctime+".jpg";
-                File file = new File (myDir, fname);
-                Log.e("camera path",""+file);
-                //File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-                startActivityForResult(intent, 0012);
-                picturePath=file.getPath();
-                bfront.setText(""+fname);
-                PreferenceHelper.setDonorFront(myView.getContext(),picturePath);
-
+                    String root = Environment.getExternalStorageDirectory().toString();
+                    File myDir = new File(root + "/LifeShare/documents");
+                    if (!myDir.exists())
+                        myDir.mkdirs();
+                    String ctime = System.currentTimeMillis() + "";
+                    String fname = "front" + ctime + ".jpg";
+                    File file = new File(myDir, fname);
+                    Log.e("camera path", "" + file);
+                    //File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                    startActivityForResult(intent, 0012);
+                    picturePath = file.getPath();
+                    bfront.setText("" + fname);
+                    PreferenceHelper.setDonorFront(myView.getContext(), picturePath);
+                }
             }
         });
 
         bback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
 
-                String root = Environment.getExternalStorageDirectory().toString();
-                File myDir = new File(root + "/LifeShare/documents");
-                if(!myDir.exists())
-                    myDir.mkdirs();
-                String ctime=System.currentTimeMillis()+"";
-                String fname = "back"+ctime+".jpg";
-                File file = new File (myDir, fname);
-                Log.e("camera path",""+file);
-                //File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-                startActivityForResult(intent, 0012);
-                picturePath=file.getPath();
-                bback.setText(""+fname);
-                PreferenceHelper.setDonorBack(myView.getContext(),picturePath);
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, 001);
+                }
+                else {
+                    Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
 
+                    String root = Environment.getExternalStorageDirectory().toString();
+                    File myDir = new File(root + "/LifeShare/documents");
+                    if (!myDir.exists())
+                        myDir.mkdirs();
+                    String ctime = System.currentTimeMillis() + "";
+                    String fname = "back" + ctime + ".jpg";
+                    File file = new File(myDir, fname);
+                    Log.e("camera path", "" + file);
+                    //File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                    startActivityForResult(intent, 0012);
+                    picturePath = file.getPath();
+                    bback.setText("" + fname);
+                    PreferenceHelper.setDonorBack(myView.getContext(), picturePath);
 
+                }
 
             }
         });

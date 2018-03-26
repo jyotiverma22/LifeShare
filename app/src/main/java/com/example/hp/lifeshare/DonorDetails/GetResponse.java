@@ -1,6 +1,10 @@
 package com.example.hp.lifeshare.DonorDetails;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -22,9 +26,23 @@ public class GetResponse extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_response);
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},1);
+        } if (ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},2);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},3);
+        }
+
+        if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},0);
+        }
+
         if ("Donor".equals(PreferenceHelper.getUserType(getApplicationContext()))) {
             VolleyHelper volleyHelper = new VolleyHelper(getApplicationContext());
-            volleyHelper.get("isDonorAccepted", null, new Response.Listener<JSONObject>() {
+            volleyHelper.get("isDonorAccepted/"+PreferenceHelper.getdetailsEmail(getApplicationContext()), null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
@@ -35,13 +53,13 @@ public class GetResponse extends AppCompatActivity {
                         } else {
                             Toast.makeText(GetResponse.this, "" + response.get("error"), Toast.LENGTH_SHORT).show();
                             int errorCode = response.getInt("errorCode");
-                            if (errorCode == 2) {
-                                startActivity(new Intent(GetResponse.this,DonorTimeline.class));
+                            if (errorCode == 1) {
+//                                startActivity(new Intent(GetResponse.this,DonorTimeline.class));
 
-                         /*       PreferenceHelper.clearDetails(getApplicationContext());
+                               PreferenceHelper.clearDetails(getApplicationContext());
                                 startActivity(new Intent(GetResponse.this, GetEmailAcitivity.class));
                                 finish();
-*/
+
                             } else {
 
                             }
@@ -60,25 +78,27 @@ public class GetResponse extends AppCompatActivity {
         else
         if ("Bank".equals(PreferenceHelper.getUserType(getApplicationContext()))) {
             VolleyHelper volleyHelper = new VolleyHelper(getApplicationContext());
-            volleyHelper.get("isBankAccepted", null, new Response.Listener<JSONObject>() {
+            volleyHelper.get("isBankAccepted/"+PreferenceHelper.getdetailsEmail(getApplicationContext()), null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
+                        Toast.makeText(GetResponse.this, ""+response.toString(), Toast.LENGTH_SHORT).show();
+
                         if (response.getBoolean("resp")) {
                                startActivity(new Intent(GetResponse.this,BloodBankActivity.class));
                                finish();
                         } else {
                             Toast.makeText(GetResponse.this, "" + response.get("error"), Toast.LENGTH_SHORT).show();
                             int errorCode = response.getInt("errorCode");
-                            if (errorCode == 2) {
-/*
+                            if (errorCode == 1) {
+
 
                                 PreferenceHelper.clearDetails(getApplicationContext());
                                 startActivity(new Intent(GetResponse.this, GetEmailAcitivity.class));
                                 finish();
-*/
-                                startActivity(new Intent(GetResponse.this,BloodBankActivity.class));
-                                finish();
+
+//                                startActivity(new Intent(GetResponse.this,BloodBankActivity.class));
+  //                              finish();
 
                             } else {
 
@@ -96,17 +116,17 @@ public class GetResponse extends AppCompatActivity {
             });
         }
         else{
-/*
+
             PreferenceHelper.clearDetails(getApplicationContext());
             startActivity(new Intent(GetResponse.this, GetEmailAcitivity.class));
             finish();
-*/
-            startActivity(new Intent(GetResponse.this,BloodBankActivity.class));
-            finish();
+
+//            startActivity(new Intent(GetResponse.this,BloodBankActivity.class));
+  //          finish();
 
 
         }
-        startActivity(new Intent(GetResponse.this,DonorTimeline.class));
+//        startActivity(new Intent(GetResponse.this,GetEmailAcitivity.class));
 
 
 

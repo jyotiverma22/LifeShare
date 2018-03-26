@@ -2,6 +2,7 @@ package com.example.hp.lifeshare.BloodBankDetails;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -107,7 +108,7 @@ public class BloodBankActivity extends AppCompatActivity
                 fragment = new issueBlood();
                 break;
             case R.id.nearByUsers:
-                fragment = new nearByUsers();
+                startActivity(new Intent(this,nearByUsers.class));
                 break;
             case R.id.history:
                 fragment = new history();

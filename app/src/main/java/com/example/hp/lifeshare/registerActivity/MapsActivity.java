@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.hp.lifeshare.DonorDetails.DonorTimeline;
 import com.example.hp.lifeshare.DonorDetails.GetResponse;
 import com.example.hp.lifeshare.PreferenceHelper;
 import com.example.hp.lifeshare.R;
@@ -358,7 +359,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.addMarker(new MarkerOptions()
                         .position(latLng) //setting position
                         .draggable(true) //Making the marker draggable
-                        .title("Current Location")); //Adding a title
+                        .title("Current Location "+latLng)); //Adding a title
 
                 //Moving the camera
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -400,7 +401,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions()
                 .position(latLng)
                 .draggable(true)
-                .title("Current Location"));
+                .title("Current Location "+latLng));
         String msg="lat long="+latitude+", "+longitude;
         Log.e("location2",""+msg);
 

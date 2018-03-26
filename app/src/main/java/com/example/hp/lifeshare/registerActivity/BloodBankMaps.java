@@ -194,7 +194,7 @@ public class BloodBankMaps extends FragmentActivity implements OnMapReadyCallbac
 
                                 }
                             });
-                            startActivity(new Intent(BloodBankMaps.this, TabActivity.class));
+                        //    startActivity(new Intent(BloodBankMaps.this, TabActivity.class));
 
 //                            startActivity(new Intent(MapsActivity.this, TabActivity.class));
                             //         return downloadUrl;
