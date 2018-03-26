@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 
+import com.example.hp.lifeshare.BloodBankDetails.nearByUsers;
 import com.example.hp.lifeshare.DonorDetails.DonorMap;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
@@ -32,7 +33,6 @@ import static com.google.android.gms.common.GooglePlayServicesUtil.getErrorStrin
  */
 
 public class GeofenceTransitionService extends IntentService {
-
     private static final String TAG = GeofenceTransitionService.class.getSimpleName();
 
     public static final int GEOFENCE_NOTIFICATION_ID = 0;
@@ -55,10 +55,13 @@ public class GeofenceTransitionService extends IntentService {
 
         int geoFenceTransition = geofencingEvent.getGeofenceTransition();
         // Check if the transition type is of interest
-        if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
-                geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT ) {
+        if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
             // Get the geofence that were triggered
-                List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+            List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+            for(Geofence g : triggeringGeofences)
+            {
+                Log.i(TAG,""+g.getRequestId());
+            }
 
             String geofenceTransitionDetails = getGeofenceTrasitionDetails(geoFenceTransition, triggeringGeofences );
 
@@ -77,11 +80,13 @@ public class GeofenceTransitionService extends IntentService {
             triggeringGeofencesList.add( geofence.getRequestId() );
         }
 
-        String status = null;
+        String status = "IN Geofence";
+/*
         if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER )
             status = "Entering ";
         else if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT )
             status = "Exiting ";
+*/
         return status + TextUtils.join( ", ", triggeringGeofencesList);
     }
 
@@ -91,7 +96,7 @@ public class GeofenceTransitionService extends IntentService {
         Log.i(TAG, "sendNotification: " + msg );
 
         // Intent to start the main Activity
-        Intent notificationIntent = DonorMap.makeNotificationIntent(
+        Intent notificationIntent = nearByUsers.makeNotificationIntent(
                 getApplicationContext(), msg
         );
 
@@ -120,7 +125,8 @@ public class GeofenceTransitionService extends IntentService {
                 .setContentTitle(msg)
                 .setContentText("Geofence Notification!")
                 .setContentIntent(notificationPendingIntent)
-                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
+                .setDefaults(Notification.DEFAULT_LIGHTS
+                )
                 .setAutoCancel(true);
         return notificationBuilder.build();
     }
