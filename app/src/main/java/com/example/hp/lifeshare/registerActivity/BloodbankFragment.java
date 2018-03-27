@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.hp.lifeshare.PreferenceHelper;
 import com.example.hp.lifeshare.R;
@@ -122,12 +123,16 @@ public class BloodbankFragment extends Fragment {
             public void onClick(View view) {
                 String name =etname.getText().toString();
                 String phone=etphone.getText().toString();
-
-                PreferenceHelper.setBloodBankDetails(getActivity(),name,phone);
+                if((name.length()==0)||(phone.length()==0))
+                {
+                    Toast.makeText(getActivity(), "Please Enter all fields", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    PreferenceHelper.setBloodBankDetails(getActivity(), name, phone);
 
 //                String address=etaddress.getText().toString();
 
-               // PreferenceHelper.setBloodBankDetails(myView.getContext(),name,phone,address);
+                    // PreferenceHelper.setBloodBankDetails(myView.getContext(),name,phone,address);
 
 
                /* Log.e("email",""+PreferenceHelper.getdetailsEmail(myView.getContext()));
@@ -137,8 +142,9 @@ public class BloodbankFragment extends Fragment {
                 Log.e("dob",""+PreferenceHelper.getdetailsDob(myView.getContext()));
                 Log.e("group",""+PreferenceHelper.getdetailsBgroup(myView.getContext()));*/
 
-                startActivity(new Intent(myView.getContext(),BloodBankMaps.class));
-
+                    startActivity(new Intent(myView.getContext(), BloodBankMaps.class));
+                    getActivity().getFragmentManager().popBackStack();
+                }
 
             }
         });

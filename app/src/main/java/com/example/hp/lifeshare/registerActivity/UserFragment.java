@@ -107,7 +107,7 @@ public class UserFragment extends Fragment {
         final View myView= inflater.inflate(R.layout.fragment_user, container, false);
         etname=(EditText)myView.findViewById(R.id.etname);
 
-        etname=(EditText)myView.findViewById(R.id.etphn);
+        etphone=(EditText)myView.findViewById(R.id.etphn);
         etdob=(EditText)myView.findViewById(R.id.etdob);
         bfront=(Button) myView.findViewById(R.id.documentFront);
         bback=(Button)myView.findViewById(R.id.documentBack);
@@ -241,21 +241,26 @@ public class UserFragment extends Fragment {
                 String dob=etdob.getText().toString();
                 String phnNo=etphone.getText().toString();
                 String bgroup= sgroup.getSelectedItem().toString();
+                if((name.length()==0)||(dob.length()==0)||(phnNo.length()==0))
+                {
+                    Toast.makeText(getActivity(), "Please Enter all fields", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Log.e("blood group", "" + bgroup);
+                    PreferenceHelper.setDonorDetails(myView.getContext(), name, dob);
+                    PreferenceHelper.setDonorBgroup(myView.getContext(), bgroup);
+                    PreferenceHelper.setdetailsPhonr(myView.getContext(), phnNo);
 
-                Log.e("blood group",""+bgroup);
-                PreferenceHelper.setDonorDetails(myView.getContext(),name,dob);
-                PreferenceHelper.setDonorBgroup(myView.getContext(),bgroup);
-                PreferenceHelper.setdetailsPhonr(myView.getContext(),phnNo);
+                    Log.e("email", "" + PreferenceHelper.getdetailsEmail(myView.getContext()));
+                    Log.e("name", "" + PreferenceHelper.getdetailsName(myView.getContext()));
+                    Log.e("front", "" + PreferenceHelper.getdetailsFront(myView.getContext()));
+                    Log.e("back", "" + PreferenceHelper.getdetailsBack(myView.getContext()));
+                    Log.e("dob", "" + PreferenceHelper.getdetailsDob(myView.getContext()));
+                    Log.e("group", "" + PreferenceHelper.getdetailsBgroup(myView.getContext()));
 
-                Log.e("email",""+PreferenceHelper.getdetailsEmail(myView.getContext()));
-                Log.e("name",""+PreferenceHelper.getdetailsName(myView.getContext()));
-                Log.e("front",""+PreferenceHelper.getdetailsFront(myView.getContext()));
-                Log.e("back",""+PreferenceHelper.getdetailsBack(myView.getContext()));
-                Log.e("dob",""+PreferenceHelper.getdetailsDob(myView.getContext()));
-                Log.e("group",""+PreferenceHelper.getdetailsBgroup(myView.getContext()));
-
-                startActivity(new Intent(myView.getContext(),MapsActivity.class));
-
+                    startActivity(new Intent(myView.getContext(), MapsActivity.class));
+                    getActivity().getFragmentManager().popBackStack();
+                }
 
             }
         });

@@ -50,6 +50,7 @@ public class MyFirebaseInstaceIdService extends FirebaseInstanceIdService implem
     public void onTokenRefresh() {
         super.onTokenRefresh();
         String recentToken= FirebaseInstanceId.getInstance().getToken();
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
 
 
 
