@@ -118,7 +118,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String email=PreferenceHelper.getdetailsEmail(getApplicationContext());
         try {
             jsonObject.put("email", "" + email);
-            jsonObject.put("phoneNo","935825465242");
+            jsonObject.put("phoneNo",PreferenceHelper.getdetailsPhone(getApplicationContext())+"");
             jsonObject.put("name",PreferenceHelper.getdetailsName(getApplicationContext())+"");
             JSONObject date=new JSONObject();
             String dob=PreferenceHelper.getdetailsDob(getApplicationContext());

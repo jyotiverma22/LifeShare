@@ -88,7 +88,7 @@ public class BloodbankFragment extends Fragment {
         final View myView= inflater.inflate(R.layout.fragment_bloodbank, container, false);
         etname=(EditText)myView.findViewById(R.id.etname);
         etphone=(EditText)myView.findViewById(R.id.etphn);
-        etaddress=(EditText)myView.findViewById(R.id.etadd);
+       // etaddress=(EditText)myView.findViewById(R.id.etadd);
         bfront=(Button) myView.findViewById(R.id.documentFront);
         bsubmit=(Button)myView.findViewById(R.id.bsubmit);
 

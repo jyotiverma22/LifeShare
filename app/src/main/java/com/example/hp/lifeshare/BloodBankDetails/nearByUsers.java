@@ -22,10 +22,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.example.hp.lifeshare.DonorDetails.DonorMap;
 import com.example.hp.lifeshare.GeofenceTransitionService;
+import com.example.hp.lifeshare.PreferenceHelper;
 import com.example.hp.lifeshare.R;
+import com.example.hp.lifeshare.VolleyHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -47,6 +53,10 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.nio.channels.FileChannel;
 
@@ -183,7 +193,7 @@ public class nearByUsers extends AppCompatActivity implements  GoogleApiClient.C
 
     private static final long GEO_DURATION = 60 * 60 * 1000;
     private static final String GEOFENCE_REQ_ID = "My Geofence";
-    private static final float GEOFENCE_RADIUS = 30.0f; // in meters
+    private static final float GEOFENCE_RADIUS = 25.0f; // in meters
 
     private final String KEY_GEOFENCE_LAT = "GEOFENCE LATITUDE";
     private final String KEY_GEOFENCE_LON = "GEOFENCE LONGITUDE";
@@ -611,6 +621,31 @@ public class nearByUsers extends AppCompatActivity implements  GoogleApiClient.C
             //Getting longitude and latitude
             longitude = location.getLongitude();
             latitude = location.getLatitude();
+            VolleyHelper volleyHelper=new VolleyHelper(getApplicationContext());
+            volleyHelper.get("subscribeMe/" + longitude + "/" + latitude, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        if(response.getBoolean("resp"))
+                        {
+                            FirebaseMessaging.getInstance().unsubscribeFromTopic(""+ PreferenceHelper.getTopic(getApplicationContext()));
+                            FirebaseMessaging.getInstance().subscribeToTopic(""+response.getString("data"));
+                            PreferenceHelper.setTopic(getApplicationContext(),""+response.getString("data"));
+                            //  Log.d(RegToken,recentToken);
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), ""+response.getString("error"), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            });
 
             LatLng latLng=new LatLng(latitude,longitude);
             markerForGeofence(latLng);

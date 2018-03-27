@@ -10,8 +10,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.example.hp.lifeshare.BloodBankDetails.BloodBankActivity;
+import com.example.hp.lifeshare.DonorDetails.DonorTimeline;
+import com.example.hp.lifeshare.DonorDetails.GetResponse;
 import com.example.hp.lifeshare.PreferenceHelper;
 import com.example.hp.lifeshare.R;
+import com.example.hp.lifeshare.VolleyHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class OtpVerifyActivity extends AppCompatActivity {
 
@@ -129,13 +138,74 @@ public class OtpVerifyActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String t=et1.getText().toString()+et2.getText().toString()+et3.getText().toString()+et4.getText().toString();
-                int myOtp=Integer.parseInt(t);
-                int otp= PreferenceHelper.getdetailsOtp(getApplicationContext());
+               final int myOtp=Integer.parseInt(t);
+                final int otp= PreferenceHelper.getdetailsOtp(getApplicationContext());
             if(otp==myOtp)
             {
-                Toast.makeText(OtpVerifyActivity.this, "Correct Otp "+otp+myOtp, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(OtpVerifyActivity.this,TabActivity.class));
-                finish();
+
+                VolleyHelper volleyHelper=new VolleyHelper(getApplicationContext());
+                volleyHelper.get("isOldUser/" + PreferenceHelper.getdetailsEmail(getApplicationContext()), null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        int respCode;
+                        Toast.makeText(OtpVerifyActivity.this, "Correct Otp "+otp+myOtp, Toast.LENGTH_SHORT).show();
+
+                        try {
+                             respCode=response.getInt("respCode");
+                            if(respCode==1)
+                            {
+                                PreferenceHelper.setUserTyoe(getApplicationContext(),"Bank");
+                                PreferenceHelper.setDonorResponse(getApplicationContext(),true);
+                                startActivity(new Intent(OtpVerifyActivity.this, BloodBankActivity.class));
+                                finish();
+
+
+                            }
+                            else if(respCode==2)
+                            {
+
+                                PreferenceHelper.setUserTyoe(getApplicationContext(),"Donor");
+                                PreferenceHelper.setDonorResponse(getApplicationContext(),true);
+                                startActivity(new Intent(OtpVerifyActivity.this, DonorTimeline.class));
+                                finish();
+
+                            }
+                            else if(respCode==3){
+                                PreferenceHelper.setUserTyoe(getApplicationContext(),"Bank");
+                                PreferenceHelper.setDonorResponse(getApplicationContext(),true);
+                                startActivity(new Intent(OtpVerifyActivity.this, GetResponse.class));
+                                finish();
+                            }
+                            else if(respCode==4){
+                                PreferenceHelper.setUserTyoe(getApplicationContext(),"Donor");
+                                PreferenceHelper.setDonorResponse(getApplicationContext(),true);
+                                startActivity(new Intent(OtpVerifyActivity.this, GetResponse.class));
+                                finish();
+
+
+                            }
+                            else if(respCode==5){
+                                startActivity(new Intent(OtpVerifyActivity.this,TabActivity.class));
+                                finish();
+
+                            }
+
+
+
+                        } catch (JSONException e) {
+                            Toast.makeText(OtpVerifyActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+
+
 
             }
             else{

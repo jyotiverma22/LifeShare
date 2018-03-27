@@ -17,34 +17,14 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/etname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:layout_marginBottom="10dp"
-            android:hint="Full Name"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="invisible">
             <EditText
-                android:id="@+id/etadd"
+                android:id="@+id/etname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:inputType="textPersonName"
                 android:layout_marginBottom="10dp"
-                android:hint="Address"
-                android:inputType="date" />
-            <Button
-                android:id="@+id/bget"
-                android:text="..."
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                />
+                android:hint="Bloodbank Name"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

@@ -28,6 +28,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -56,7 +58,7 @@ public class UserFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    EditText etname,etdob;
+    EditText etname,etdob,etphone;
     Button bfront,bback,bsubmit;
     DatePickerDialog mDatePicker;
     Spinner sgroup;
@@ -64,7 +66,7 @@ public class UserFragment extends Fragment {
     String picturePath;
     final static int MY_REQUEST_CODE = 100;
     private OnFragmentInteractionListener mListener;
-
+    private RadioGroup radioGroup;
     public UserFragment() {
         // Required empty public constructor
     }
@@ -104,11 +106,27 @@ public class UserFragment extends Fragment {
         // Inflate the layout for this fragment
         final View myView= inflater.inflate(R.layout.fragment_user, container, false);
         etname=(EditText)myView.findViewById(R.id.etname);
+
+        etname=(EditText)myView.findViewById(R.id.etphn);
         etdob=(EditText)myView.findViewById(R.id.etdob);
         bfront=(Button) myView.findViewById(R.id.documentFront);
         bback=(Button)myView.findViewById(R.id.documentBack);
         bsubmit=(Button)myView.findViewById(R.id.bsubmit);
         sgroup=(Spinner)myView.findViewById(R.id.bloodGroup);
+//        radioGroup = (RadioGroup) myView.findViewById(R.id.radioGroup);
+  //      radioGroup.clearCheck();
+/*
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton rb = (RadioButton) group.findViewById(checkedId);
+                if (null != rb && checkedId > -1) {
+                    Toast.makeText(getActivity(), rb.getText(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });*/
+
 
         /*
         List<String> repeatType = db.getRepeatType();
@@ -209,6 +227,7 @@ public class UserFragment extends Fragment {
     //            Log.e("Repeat type1",""+Repeat);
             }
 
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
@@ -220,10 +239,13 @@ public class UserFragment extends Fragment {
             public void onClick(View view) {
                 String name =etname.getText().toString();
                 String dob=etdob.getText().toString();
+                String phnNo=etphone.getText().toString();
                 String bgroup= sgroup.getSelectedItem().toString();
+
                 Log.e("blood group",""+bgroup);
                 PreferenceHelper.setDonorDetails(myView.getContext(),name,dob);
                 PreferenceHelper.setDonorBgroup(myView.getContext(),bgroup);
+                PreferenceHelper.setdetailsPhonr(myView.getContext(),phnNo);
 
                 Log.e("email",""+PreferenceHelper.getdetailsEmail(myView.getContext()));
                 Log.e("name",""+PreferenceHelper.getdetailsName(myView.getContext()));
@@ -250,60 +272,10 @@ public class UserFragment extends Fragment {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode)
             {
-                case 0011:
-                    if(data!=null) {
-                        try {
-
-             /*               final Uri imageUri = data.getData();
-                            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-                            Cursor cursor = getContentResolver().query(imageUri,filePathColumn, null, null, null);
-                            cursor.moveToFirst();
-                            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-
-                            picturePath = cursor.getString(columnIndex);
-                            Log.e("nnew path",""+picturePath);
-                            cursor.close();
-                            Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
-
-                            Bitmap bt=Bitmap.createScaledBitmap(bitmap, 120, 120, false);
-//                            Bitmap bt=Bitmap.createScaledBitmap(bitmap, 150, 150, false);
-//                            final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                            //                          final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                            profilepic.setImageBitmap(bt);
-                            savefile(picturePath);
-                            Log.e("details in pref",""+emailAndotpPreference.getdetailsImagePath(getApplicationContext())+" "+emailAndotpPreference.getImageStatus(getApplicationContext()));
-                            ExifInterface exif = null;
-             */               try {
-
-                            } catch (Exception e) {
-
-                            }
-                            //   selectedImage.setHeight();
-                            // selectedImage.setWidth();
-                            // profilepic.setImageBitmap(selectedImage);
-                        } catch (Exception e) {
-               //             Toast.makeText(this, "File not Found", Toast.LENGTH_SHORT).show();
-                            e.printStackTrace();
-                        }
-                    }
-
-                    break;
                 case 0012:
                     try {
-                        //   final Uri imageUri = data.getData();
-
-
-                        //    Bitmap photo = (Bitmap) data.getExtras().get("data");
-                        //    profilepic.setImageBitmap(photo);
-
 
                         Log.e("pathhhh",""+picturePath);
-//                        profilepic.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-//                      //.setdetailsImagePath(getApplicationContext(),picturePath);
-//                        emailAndotpPreference.setImageStatus(getApplicationContext(),true);
-
-//                        Bitmap photo = (Bitmap) data.getExtras().get("data");
-                        //                      profilepic.setImageBitmap(photo);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -13,6 +13,21 @@ public class PreferenceHelper {
     private  static SharedPreferences appPref;
     private  static SharedPreferences.Editor appEditor,detailEditor;
 
+    public static void setTopic(Context context,String topic)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        detailEditor=detailPref.edit();
+        detailEditor.putString("topic",topic);
+        detailEditor.commit();
+    }
+
+    public static String getTopic(Context context)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        return detailPref.getString("topic",null);
+    }
+
+
     public static void setdetails(Context context,String email,int otp)
     {
         detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
@@ -37,6 +52,13 @@ public class PreferenceHelper {
         detailEditor.putString("phone",phone);
         detailEditor.commit();
     }
+    public static void setdetailsPhonr(Context context,String phone)
+    {
+        detailPref=context.getSharedPreferences("detailPref",Context.MODE_PRIVATE);
+        detailEditor=detailPref.edit();
+        detailEditor.putString("phone",phone);
+        detailEditor.commit();
+    }
 
     public static String getdetailsPhone(Context context)
     {
@@ -44,6 +66,8 @@ public class PreferenceHelper {
         return detailPref.getString("phone",null);
 
     }
+
+
 
     public static void setDonorResponse(Context context,Boolean resp)
     {

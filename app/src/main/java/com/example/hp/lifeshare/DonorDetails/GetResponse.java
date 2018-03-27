@@ -48,7 +48,7 @@ public class GetResponse extends AppCompatActivity {
                             android.Manifest.permission.CAMERA},0);
 
         }
-
+        Toast.makeText(this, ""+PreferenceHelper.getUserType(getApplicationContext()), Toast.LENGTH_SHORT).show();
         if ("Donor".equals(PreferenceHelper.getUserType(getApplicationContext()))) {
             VolleyHelper volleyHelper = new VolleyHelper(getApplicationContext());
             volleyHelper.get("isDonorAccepted/"+PreferenceHelper.getdetailsEmail(getApplicationContext()), null, new Response.Listener<JSONObject>() {

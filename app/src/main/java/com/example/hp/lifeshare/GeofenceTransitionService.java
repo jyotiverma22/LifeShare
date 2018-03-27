@@ -123,7 +123,7 @@ public class GeofenceTransitionService extends IntentService {
                 .setSmallIcon(R.drawable.ic_action_location)
                 .setColor(Color.RED)
                 .setContentTitle(msg)
-                .setContentText("Geofence Notification!")
+                .setContentText("Geofence Notification! new")
                 .setContentIntent(notificationPendingIntent)
                 .setDefaults(Notification.DEFAULT_LIGHTS
                 )

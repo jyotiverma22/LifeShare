@@ -16,8 +16,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.example.hp.lifeshare.BankPreferenceHelper;
+import com.example.hp.lifeshare.PreferenceHelper;
 import com.example.hp.lifeshare.R;
+import com.example.hp.lifeshare.VolleyHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by ANUBHAV on 24-Mar-18.
@@ -51,7 +58,7 @@ public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
     @Override
     public void onResume() {
         super.onResume();
-        String[] bgroups=new String[]{"O+","O-","A+","A-","B+","B-","AB+","AB-"};
+        String[] bgroups=new String[]{"o+","o-","a+","a-","b+","b-","ab+","ab-"};
         final ArrayAdapter<String> adapter=new ArrayAdapter<String>(c,android.R.layout.simple_spinner_item,bgroups);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         bg.setAdapter(adapter);
@@ -80,6 +87,7 @@ public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
 
 
                 int oldCount = BankPreferenceHelper.get(c,bloodBankHistoryItem.getGroup());
+                Toast.makeText(c, ""+oldCount+"-"+count, Toast.LENGTH_SHORT).show();
                 if(oldCount >= count){
                     Log.i("abc",bloodBankHistoryItem.toString());
                     db.additem(bloodBankHistoryItem);
@@ -87,6 +95,30 @@ public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
 
                 }
                 else {
+                    VolleyHelper volleyHelper=new VolleyHelper(getActivity());
+                    volleyHelper.get("requireBlood/" + PreferenceHelper.getdetailsEmail(getActivity()) + "/" + bloodBankHistoryItem.getGroup(), null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                if(response.getBoolean("resp"))
+                                {
+                                    Toast.makeText(c, "Notification sent successfully", Toast.LENGTH_SHORT).show();
+                                }
+                                else{
+                                    Toast.makeText(c, ""+response.getString("error"), Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
+                    });
+
                     Toast.makeText(c, "not enough blood available", Toast.LENGTH_SHORT).show();
                 }
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
